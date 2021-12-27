@@ -15,7 +15,6 @@ public static String executePost() {
     //Send request
     DataOutputStream wr = new DataOutputStream (
         connection.getOutputStream());
-    wr.writeBytes(urlParameters);
     wr.close();
 
     //Get Response  
