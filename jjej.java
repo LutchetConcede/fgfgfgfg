@@ -1,39 +1,21 @@
-public static String executePost() {
-  HttpURLConnection connection = null;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-  try {
-    //Create connection
-    URL url = new URL("https://vivado.requestcatcher.com");
-    connection = (HttpURLConnection) url.openConnection();
-    connection.setRequestMethod("POST");
-    connection.setRequestProperty("Content-Type", 
-        "application/x-www-form-urlencoded");
+public class GetRequestJava11 {
 
-    connection.setUseCaches(false);
-    connection.setDoOutput(true);
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-    //Send request
-    DataOutputStream wr = new DataOutputStream (
-        connection.getOutputStream());
-    wr.close();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://vivado.requestcatcher.com/"))
+                .build();
 
-    //Get Response  
-    InputStream is = connection.getInputStream();
-    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-    StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
-    String line;
-    while ((line = rd.readLine()) != null) {
-      response.append(line);
-      response.append('\r');
+        HttpResponse<String> response = client.send(request,
+                HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.body());
     }
-    rd.close();
-    return response.toString();
-  } catch (Exception e) {
-    e.printStackTrace();
-    return null;
-  } finally {
-    if (connection != null) {
-      connection.disconnect();
-    }
-  }
 }
